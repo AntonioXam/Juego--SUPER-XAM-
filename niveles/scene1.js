@@ -4,6 +4,8 @@ class scene1 extends Phaser.Scene {
         super({ key: 'nivel1' }); // nombre de la escena
     }
 
+  
+
     preload() { 
         // carga de recursos
         this.load.image('background', 'assets/fondoArboles.png');
@@ -18,8 +20,7 @@ class scene1 extends Phaser.Scene {
         this.load.image('toad_celebrar', 'assets/toad_celebrar.png');
         this.load.spritesheet('setas', 'assets/setas.png', { frameWidth: 267, frameHeight: 235 });
         this.load.spritesheet('disparo', 'assets/disparo.png', { frameWidth: 114.6, frameHeight: 101 });
-        this.load.spritesheet('enemigo2', 'assets/enemigo2.png', { frameWidth: 130, frameHeight: 180 });
-        this.load.spritesheet('enemigo1', 'assets/enemigo1.png', { frameWidth: 249, frameHeight: 250 });
+        this.load.spritesheet('enemigo', 'assets/goomba.png', { frameWidth: 130, frameHeight: 180 });
         this.load.image('explosion', 'assets/explosion.png');
         this.load.audio('nivel1Music', 'assets/nivel1Music.mp3');
         this.load.audio('shoot', 'assets/shoot.mp3');
@@ -27,6 +28,7 @@ class scene1 extends Phaser.Scene {
         this.load.audio('hit', 'assets/hit.mp3');
         this.load.audio('salto', 'assets/salto.mp3');
         this.load.audio('seta', 'assets/seta.mp3');
+        this.load.audio('nivel_ganado', 'assets/nivel_ganado.mp3');
     }
 
     create() { 
@@ -67,7 +69,7 @@ class scene1 extends Phaser.Scene {
         this.physics.add.collider(this.player, plataformas);
         this.player.setSize(100, 150);
         this.player.setOffset(40, 20); // ajustar el tamaño del jugador 
-        this.player.lives = 3; // Añadir vidas al jugador
+        this.player.lives = vidas; // variable guardada en game.js
 
         //animacion del jugador
         this.anims.create({
@@ -123,16 +125,11 @@ class scene1 extends Phaser.Scene {
             repeat: -1
         });
 
-        this.anims.create({
-            key: 'enemigo1',
-            frames: this.anims.generateFrameNumbers('enemigo1', { start: 0, end: 3 }),
-            frameRate: 7,
-            repeat: -1
-        });
+    
         // enemigo
         this.anims.create({
-            key: 'enemigo2',
-            frames: this.anims.generateFrameNumbers('enemigo2', { start: 0, end: 7 }),
+            key: 'enemigo',
+            frames: this.anims.generateFrameNumbers('enemigo', { start: 0, end: 7 }),
             frameRate: 7,
             repeat: -1
         });
@@ -193,15 +190,21 @@ class scene1 extends Phaser.Scene {
         });
         // marcador de enemigos matados
                 
-       this.enemyKillCount = 20; // Inicializar el contador de enemigos matados a 20
-     this.enemyKillCountText = this.add.text(1016, 16, 'Enemigos restantes: 20', { fontSize: '48px', fill: '#ffff00' }); // Cambiar color a amarillo
+       this.enemyKillCount = enemigos_destruir; // variable guardada en game.js
+    this.enemyKillCountText = this.add.text(1016, 16, 'Enemigos restantes: ' + enemigos_destruir, { fontSize: '48px', fill: '#ffff00' }); // Cambiar color a amarillo
+
                 this.enemyKillCountText.setStroke('#086b53', 8);
                 this.enemyKillCountText.setShadow(2, 2, '#333333', 2, true, true);
 
-           
+         //marcador del nivel con la funcion marcador_nivel
+        this.marcador_nivel = marcador_nivel(this.scene.key);
+        this.marcador_nivelText = this.add.text(1670, 16, this.marcador_nivel, { fontSize: '48px', fill: '#ffffff' });  
+        this.marcador_nivelText.setStroke('#086b53', 8);
+        this.marcador_nivelText.setShadow(2, 2, '#333333', 2, true, true);
+
         //marcador con la munición que tiene
-        this.municion = 30;
-        this.municionText = this.add.text(316, 16, 'Municion: 30', { fontSize: '48px', fill: '#ff0000' }); // Cambiar color a rojo
+        this.municion = municion; // variable guardada en game.js
+        this.municionText = this.add.text(316, 16, 'Municion: ' + municion, { fontSize: '48px', fill: '#0000ff' }); // Cambiar color a azul
         this.municionText.setStroke('#086b53', 8);
         this.municionText.setShadow(2, 2, '#333333', 2, true, true);
 
@@ -215,7 +218,7 @@ class scene1 extends Phaser.Scene {
         this.scoreText.setShadow(2, 2, '#333333', 2, true, true);
 
         // marcador de vidas
-        this.livesText = this.add.text(716, 16, 'Vidas: 3', { fontSize: '48px', fill: '#0000ff' }); // Cambiar color a azul
+        this.livesText = this.add.text(716, 16, 'Vidas: ' + vidas, { fontSize: '48px', fill: '#ff0000' }); // Cambiar color a rojo
         this.livesText.setStroke('#086b53', 8);
         this.livesText.setShadow(2, 2, '#333333', 2, true, true);
 
@@ -264,8 +267,8 @@ class scene1 extends Phaser.Scene {
         for (let i = 0; i < 7; i++) {
             const x = Phaser.Math.Between(1500, 1920);
             const y = Phaser.Math.Between(0, 1080);
-            const enemigo = this.physics.add.sprite(x, y, 'enemigo2');
-            enemigo.anims.play('enemigo2', true);
+            const enemigo = this.physics.add.sprite(x, y, 'enemigo');
+            enemigo.anims.play('enemigo', true);
             this.enemigos.add(enemigo);
         }
         this.enemigos.children.iterate(function (child) {
@@ -297,8 +300,8 @@ class scene1 extends Phaser.Scene {
             const newScale = lastEnemy ? lastEnemy.scale + 0.1 : 0.5;
 
             // Añadir un enemigo más grande
-            const newEnemigo = this.physics.add.sprite(x, y, 'enemigo2');
-            newEnemigo.anims.play('enemigo2', true);
+            const newEnemigo = this.physics.add.sprite(x, y, 'enemigo');
+            newEnemigo.anims.play('enemigo', true);
             
             newEnemigo.setBounce(1);
             newEnemigo.setCollideWorldBounds(true);
@@ -322,28 +325,12 @@ class scene1 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1920, 1080);
         this.cameras.main.startFollow(this.player);
       
-
-      
-      
-
-        
-
-     
-
-
-        
-
-
-        
     }
 
     cameraShake() {
         this.cameras.main.shake(100);
     }
 
-
- 
- 
 
     update() { 
 
@@ -475,7 +462,7 @@ class scene1 extends Phaser.Scene {
 
         //animacion de los enemigos
         this.enemigos.children.iterate(function (child) {
-            child.anims.play('enemigo2', true);
+            child.anims.play('enemigo', true);
         });
 
         //que se gire el enemigo dependiendo de la direccion
@@ -488,15 +475,23 @@ class scene1 extends Phaser.Scene {
 
     //al matar a todos los enemigos mensaje de victoria , toad celebra y se continua al siguiente nivel
     win() {
+        this.sound.stopAll();
         this.physics.pause();
+        //audio de nivel ganado
+        this.sound.add('nivel_ganado').play();
+
         //desaparecer jugador
         this.player.disableBody(true, true);
         this.player.image = this.add.image(960, 900, 'toad_celebrar');
-        var winText = this.add.text(600, 400, 'Todos eliminados!!', { fontSize: '72px', fill: '#ff0000' });
+        var winText = this.add.text(600, 400, 'Todos eliminados!!', { fontSize: '72px', fill: '#ffffff' });
         winText.setStroke('#000000', 8);
-        winText.setShadow(2, 2, '#333333', 2, true, true);
-        
-        var button = this.add.text(600, 700, 'Siguiente nivel', { fontSize: '72px', fill: '#ff0000', backgroundColor: '#000000' });
+        winText.setShadow(2, 2, '#000000', 2, true, true);
+
+        var button = this.add.text(600, 700, 'Siguiente nivel', { fontSize: '72px', fill: '#ffffff' });
+
+        button.setStroke('#000000', 8);
+        button.setShadow(2, 2, '#000000', 2, true, true);
+
         button.setStroke('#000000', 8);
         button.setShadow(2, 2, '#333333', 2, true, true);
         button.setPadding(10);
@@ -504,7 +499,7 @@ class scene1 extends Phaser.Scene {
         button.on('pointerdown', () => {
             this.scene.start('nivel2');
             // Detener la música de fondo
-            this.sound.stopAll();
+            
         });
         }
 
