@@ -260,12 +260,14 @@ class scene1 extends Phaser.Scene {
         }, this);
 
         //enemigos
-        this.enemigos = this.physics.add.group({
-            key: 'enemigo2',
-            repeat: 6,
-            //se generan enemigos en lugares aleatorios en el lado derecho de la pantalla
-            setXY: { x: Phaser.Math.Between(1500, 1920), y: Phaser.Math.Between(0, 1080), stepX: 300 }
-        });
+        this.enemigos = this.physics.add.group();
+        for (let i = 0; i < 7; i++) {
+            const x = Phaser.Math.Between(1500, 1920);
+            const y = Phaser.Math.Between(0, 1080);
+            const enemigo = this.physics.add.sprite(x, y, 'enemigo2');
+            enemigo.anims.play('enemigo2', true);
+            this.enemigos.add(enemigo);
+        }
         this.enemigos.children.iterate(function (child) {
             child.setBounce(1);
             child.setCollideWorldBounds(true);

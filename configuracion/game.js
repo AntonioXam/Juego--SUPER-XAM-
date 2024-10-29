@@ -16,7 +16,7 @@ var config = {
     },
 
     // escenas que se van a utilizar
-    scene : [inicio ,scene1, scene2, GameOver ]
+    scene : [ Victoria, inicio ,scene1, scene2, GameOver, ]
  
 
 
