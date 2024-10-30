@@ -56,11 +56,11 @@ class inicio extends Phaser.Scene {
         });
 
         // Agregar el selector de dificultad
-        this.add.text(950, 600, 'Selecciona la dificultad:', { fontSize: '32px', fill: '#fff', stroke: '#000', strokeThickness: 6 }).setOrigin(0.5);
-        const easy = this.add.image(650, 700, 'easy').setInteractive().setScale(0.5);
-        const medium = this.add.image(850, 700, 'medium').setInteractive().setScale(0.5);
-        const hard = this.add.image(1050, 700, 'hard').setInteractive().setScale(0.5);
-        const extreme = this.add.image(1250, 700, 'extreme').setInteractive().setScale(0.5);
+        this.add.text(950, 650, 'Selecciona la dificultad:', { fontSize: '32px', fill: '#fff', stroke: '#000', strokeThickness: 6 }).setOrigin(0.5);
+        const easy = this.add.image(650, 750, 'easy').setInteractive().setScale(0.5);
+        const medium = this.add.image(850, 750, 'medium').setInteractive().setScale(0.5);
+        const hard = this.add.image(1050, 750, 'hard').setInteractive().setScale(0.5);
+        const extreme = this.add.image(1250, 750, 'extreme').setInteractive().setScale(0.5);
 
         // Evento para cambiar la dificultad al hacer clic en el botón
         easy.on('pointerdown', () => {
