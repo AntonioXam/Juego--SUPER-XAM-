@@ -48,7 +48,7 @@ class Victoria extends Phaser.Scene {
             }).setOrigin(0.5, 0.5);
         }
 
-        this.credits.y -= 0.5; // Ajusta la velocidad de subida aquí
+        this.credits.y -= 0.8; // Ajusta la velocidad de subida aquí
 
         //cuando acaben los creditos volver a la pantalla de inicio
         if (this.credits.y < -5000) {

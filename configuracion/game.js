@@ -10,7 +10,7 @@ var config = {
         default:"arcade", // tipo de fisica que va a utilizar 
         arcade: {
             gravity: { y :1800},// la gravedad del juego
-            debug:true // debug
+            debug: false // debug
         }
     },
 
@@ -27,7 +27,7 @@ var game = new Phaser.Game(config)
 
 // valores parar guardado de datos
 var vidas = 3;
-var enemigos_destruir = 1;
+var enemigos_destruir = 15;
 var municion = 30;
 
 // función para ajustar la dificultad
@@ -35,23 +35,23 @@ function ajustarDificultad(dificultad) {
     switch(dificultad) {
         case 'easy':
             vidas = 5;
-            enemigos_destruir = 1;
+            enemigos_destruir = 3;
             break;
         case 'medium':
             vidas = 3;
-            enemigos_destruir = 3;
+            enemigos_destruir = 5;
             break;
         case 'hard':
-            vidas = 1;
-            enemigos_destruir = 5;
+            vidas = 2;
+            enemigos_destruir = 10;
             break;
         case 'extreme':
             vidas = 1;
-            enemigos_destruir = 10;
+            enemigos_destruir = 15;
             break;
         default:
-            vidas = 3;
-            enemigos_destruir = 1;
+            vidas = 5;
+            enemigos_destruir = 15;
     }
 }
 

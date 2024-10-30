@@ -241,7 +241,7 @@ class BossScene extends Phaser.Scene {
         this.bowser.setCollideWorldBounds(true);
         this.bowser.setSize(100, 90);
         this.bowser.setOffset(8, 25);
-        this.bowser.lives = 150; // Bowser can withstand 50 hits
+        this.bowser.lives = 200; // Bowser can withstand 50 hits
         this.physics.add.collider(this.bowser, this.plataformas);
         this.physics.add.collider(this.bowser, this.player);
         this.bowser.anims.play('bowser', true);
