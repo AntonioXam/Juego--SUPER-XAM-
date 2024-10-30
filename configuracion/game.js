@@ -1,4 +1,3 @@
-
 var config = {
     type:Phaser.AUTO,
     scale: {
@@ -16,7 +15,7 @@ var config = {
     },
 
     // escenas que se van a utilizar
-    scene : [ BossScene,inicio ,scene1, scene2, , GameOver, Victoria ]
+    scene : [ inicio ,scene1, scene2, , GameOver, Victoria, BossScene ]
  
 
 
@@ -27,11 +26,38 @@ var game = new Phaser.Game(config)
 
 
 // valores parar guardado de datos
-var vidas = 2;
+var vidas = 3;
 var enemigos_destruir = 1;
 var municion = 30;
 
+// función para ajustar la dificultad
+function ajustarDificultad(dificultad) {
+    switch(dificultad) {
+        case 'easy':
+            vidas = 5;
+            enemigos_destruir = 1;
+            break;
+        case 'medium':
+            vidas = 3;
+            enemigos_destruir = 3;
+            break;
+        case 'hard':
+            vidas = 1;
+            enemigos_destruir = 5;
+            break;
+        case 'extreme':
+            vidas = 1;
+            enemigos_destruir = 10;
+            break;
+        default:
+            vidas = 3;
+            enemigos_destruir = 1;
+    }
+}
 
+// Obtener la dificultad del registro de Phaser
+var dificultad = game.registry.get('dificultad') || 'medium';
+ajustarDificultad(dificultad);
 
 //funcion marcador de nivel que coge la key de la escena y la pone en el marcador
 function marcador_nivel(key){

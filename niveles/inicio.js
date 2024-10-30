@@ -10,6 +10,12 @@ class inicio extends Phaser.Scene {
         this.load.audio('introMusic', 'assets/introMusic.mp3');
         this.load.audio('pressStart', 'assets/pressStart.ogg');
         this.load.audio('Accept', 'assets/Accept.mp3');
+        // Cargar imágenes para el selector de dificultad
+        this.load.image('easy', 'assets/easy.png');
+        this.load.image('medium', 'assets/medium.png');
+        this.load.image('hard', 'assets/hard.png');
+        this.load.image('extreme', 'assets/extreme.png');
+        this.load.audio('oh_yeah', 'assets/oh_yeah.mp3');
     }
 
     create() {
@@ -48,6 +54,38 @@ class inicio extends Phaser.Scene {
             this.sound.add('Accept').play();
           
         });
+
+        // Agregar el selector de dificultad
+        this.add.text(950, 600, 'Selecciona la dificultad:', { fontSize: '32px', fill: '#fff', stroke: '#000', strokeThickness: 6 }).setOrigin(0.5);
+        const easy = this.add.image(650, 700, 'easy').setInteractive().setScale(0.5);
+        const medium = this.add.image(850, 700, 'medium').setInteractive().setScale(0.5);
+        const hard = this.add.image(1050, 700, 'hard').setInteractive().setScale(0.5);
+        const extreme = this.add.image(1250, 700, 'extreme').setInteractive().setScale(0.5);
+
+        // Evento para cambiar la dificultad al hacer clic en el botón
+        easy.on('pointerdown', () => {
+            this.registry.set('dificultad', 'easy');
+            this.registry.set('vidas', 5);
+            this.registry.set('enemigos_destruir', 1);
+            this.sound.add('oh_yeah').play();
+        });
+        medium.on('pointerdown', () => {
+            this.registry.set('dificultad', 'medium');
+            this.registry.set('vidas', 3);
+            this.registry.set('enemigos_destruir', 3);
+            this.sound.add('oh_yeah').play();
+        });
+        hard.on('pointerdown', () => {
+            this.registry.set('dificultad', 'hard');
+            this.registry.set('vidas', 1);
+            this.registry.set('enemigos_destruir', 5);
+            this.sound.add('oh_yeah').play();
+        });
+        extreme.on('pointerdown', () => {
+            this.registry.set('dificultad', 'extreme');
+            this.registry.set('vidas', 1);
+            this.registry.set('enemigos_destruir', 10);
+            this.sound.add('oh_yeah').play();
+        });
     }
 }
-

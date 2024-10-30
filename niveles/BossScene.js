@@ -22,6 +22,7 @@ class BossScene extends Phaser.Scene {
         this.load.spritesheet('fuego', 'assets/fuego.png', { frameWidth: 320, frameHeight: 150 });
         this.load.spritesheet('setas', 'assets/setas.png', { frameWidth: 267, frameHeight: 235 });
         this.load.audio('seta', 'assets/seta.mp3');
+        this.load.audio('nivel_ganado', 'assets/nivel_ganado.mp3');
     }
 
     create() {
@@ -42,6 +43,13 @@ class BossScene extends Phaser.Scene {
         this.plataformas.create(950, 1050, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
         this.plataformas.create(300, 1050, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
         this.plataformas.create(1600, 1050, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
+        this.plataformas.create(600, 1050, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
+        this.plataformas.create(1200, 1050, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
+        this.plataformas.create(1800, 1050, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
+        //plataformas para que bowser no se caiga
+        this.plataformas.create(1920, 600, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
+        this.plataformas.create(0, 600, 'plataformaBowser').setScale(1.5, 1.5).refreshBody();
+        
 
         this.physics.add.collider(this.player, this.plataformas);
         this.player.setSize(100, 150);
@@ -116,7 +124,12 @@ class BossScene extends Phaser.Scene {
 
                     bullet.setVelocity(velocityX, velocityY);
                     this.municion -= 1;
+                    // actualizar la municion darle color y sombra
                     this.municionText.setText('Municion: ' + this.municion);
+                    this.municionText.setStroke('#000', 8);
+                    this.municionText.setShadow(2, 2, '#333333', 2, true, true);
+
+
                     this.player.anims.play('disparando', true);
 
                     // Flip the player based on the direction of the shot
@@ -148,6 +161,24 @@ class BossScene extends Phaser.Scene {
         });
 
 
+        
+         //marcador del nivel con la funcion marcador_nivel
+         this.marcador_nivel = marcador_nivel(this.scene.key);
+         this.marcador_nivelText = this.add.text(1670, 16, this.marcador_nivel, { fontSize: '48px', fill: '#ffffff' });  
+         this.marcador_nivelText.setStroke('#086b53', 8);
+         this.marcador_nivelText.setShadow(2, 2, '#333333', 2, true, true);
+ 
+      
+         //marcador de vidas
+            this.vidasText = this.add.text(16, 50, 'Vidas: ' + this.player.lives, { fontSize: '32px', fill: '#FFF' });
+            this.vidasText.setStroke('#000', 8);
+            this.vidasText.setShadow(2, 2, '#333333', 2, true, true);
+       
+
+
+
+ 
+   
 
 
         // Recoger seta
@@ -210,7 +241,7 @@ class BossScene extends Phaser.Scene {
         this.bowser.setCollideWorldBounds(true);
         this.bowser.setSize(100, 90);
         this.bowser.setOffset(8, 25);
-        this.bowser.lives = 50; // Bowser can withstand 50 hits
+        this.bowser.lives = 150; // Bowser can withstand 50 hits
         this.physics.add.collider(this.bowser, this.plataformas);
         this.physics.add.collider(this.bowser, this.player);
         this.bowser.anims.play('bowser', true);
@@ -398,10 +429,14 @@ class BossScene extends Phaser.Scene {
     hitBowser(bowser) {
         bowser.lives -= 1;
         if (bowser.lives <= 0) {
+            // Reproducir sonido de nivel ganado
+            this.sound.add('nivel_ganado').play();
             bowser.disableBody(true, true);
-            // Play Bowser's defeated animation
             bowser.anims.play('bowser_vencido', true);
-            this.player.anims.play('toad_celebrar', true);
+            //desaparecer jugador
+             this.player.disableBody(true, true);
+             this.player.image = this.add.image(960, 900, 'toad_celebrar');
+            ;
             this.time.delayedCall(7000, () => {
                 this.scene.start('Victoria');
             });
@@ -433,6 +468,8 @@ class BossScene extends Phaser.Scene {
     cameraShake() {
         this.cameras.main.shake(100);
     }
+
+    
 }
 
 

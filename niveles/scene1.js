@@ -208,8 +208,15 @@ class scene1 extends Phaser.Scene {
         this.municionText.setStroke('#086b53', 8);
         this.municionText.setShadow(2, 2, '#333333', 2, true, true);
 
-        //cuando se queda sin municion no puede disparar
-        this.physics.add.overlap(this.player, this.bullets, this.collectBullets, null, this);
+        //enemigos restantes
+        this.enemyKillCountText = this.add.text(1016, 16, 'Enemigos restantes: ' + enemigos_destruir, { fontSize: '48px', fill: '#ffff00' }); // Cambiar color a amarillo
+        this.enemyKillCountText.setStroke('#086b53', 8);
+
+        this.enemyKillCountText.setShadow(2, 2, '#333333', 2, true, true);
+        
+
+
+        
 
         //funcion de recoleccion de setas
         this.score = 0;
@@ -226,7 +233,8 @@ class scene1 extends Phaser.Scene {
         this.cameras.main.startFollow(this.player);
         
         
-
+//cuando se queda sin municion no puede disparar
+        this.physics.add.overlap(this.player, this.bullets, this.collectBullets, null, this);
 
 
         // velocidad inicial del jugador
